@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -30,13 +30,29 @@
             overflow: hidden;
             position: relative;
         }
+        .room {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            display: none;
+        }
+        #room1 {
+            background-color: #ffcccc; /* Example room background color */
+        }
+        #room2 {
+            background-color: #ccffcc; /* Example room background color */
+        }
     </style>
 </head>
 <body>
     <div id="player"></div>
+    <div id="room1" class="room"></div>
+    <div id="room2" class="room"></div>
+
 
     <script>
         const player = document.getElementById('player');
+        const rooms = document.querySelectorAll('.room');
         let playerX = window.innerWidth / 2;
         let playerY = window.innerHeight / 2;
         let mouseX = playerX;
@@ -97,165 +113,42 @@
             playerX += deltaX;
             playerY += deltaY;
             updatePlayerPosition();
+            checkRoomTransition();
         }
 
         function updatePlayerPosition() {
             player.style.left = `${playerX}px`;
             player.style.top = `${playerY}px`;
         }
-    </script>
-</body>
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Transition with Player Movement, Camera Panning, and Mouse Rotation</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            position: relative;
-        }
-        .room {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            display: none;
-        }
-        #room1 {
-            background-color: #ffcccc; /* Example room background color */
-        }
-        #room2 {
-            background-color: #ccffcc; /* Example room background color */
-        }
-        /* Add more room styles as needed */
-        #player {
-            width: 50px;
-            height: 50px;
-            background-color: red;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: center;
-        }
-    </style>
-</head>
-<body>
-    <div id="room1" class="room"></div>
-    <div id="room2" class="room"></div>
-    <!-- Add more room elements as needed -->
-    <div id="player"></div>
+        function checkRoomTransition() {
+        const playerRect = player.getBoundingClientRect();
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const player = document.getElementById('player');
-            const rooms = document.querySelectorAll('.room');
-            let currentRoomIndex = 0;
+        // Check if player reaches the edges of the current room
+        if (playerRect.left < 0 || playerRect.top < 0 ||
+            playerRect.right > window.innerWidth || playerRect.bottom > window.innerHeight) {
+            // Hide current room
+            rooms[currentRoomIndex].style.display = 'none';
 
-            let playerX = window.innerWidth / 2;
-            let playerY = window.innerHeight / 2;
-            let mouseX = playerX;
-            let mouseY = playerY;
-            let playerAngle = 0;
-            const speed = 5;
-            let keysPressed = {};
+            // Move to the next room (cycle back to the first room if at the last room)
+            currentRoomIndex = (currentRoomIndex + 1) % rooms.length;
 
-            document.addEventListener('mousemove', function(event) {
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            });
+            // Show the new room
+            rooms[currentRoomIndex].style.display = 'block';
 
-            function updateRotation() {
-                const rect = player.getBoundingClientRect();
-                const playerCenterX = rect.left + rect.width / 2;
-                const playerCenterY = rect.top + rect.height / 2;
-                const angleRad = Math.atan2(mouseY - playerCenterY, mouseX - playerCenterX);
-                playerAngle = angleRad * (180 / Math.PI);
-                player.style.transform = `translate(-50%, -50%) rotate(${playerAngle}deg)`;
+            // Reposition the player at the opposite edge of the new room
+            if (playerRect.left < 0) {
+                player.style.left = `${window.innerWidth - playerRect.width}px`;
             }
-
-            setInterval(updateRotation, 20);
-
-            document.addEventListener('keydown', function(event) {
-                keysPressed[event.key] = true;
-                movePlayer();
-                checkRoomTransition();
-            });
-
-            document.addEventListener('keyup', function(event) {
-                delete keysPressed[event.key];
-                movePlayer();
-                checkRoomTransition();
-            });
-
-            function movePlayer() {
-                let deltaX = 0;
-                let deltaY = 0;
-                const angleRad = playerAngle * (Math.PI / 180);
-
-                if (keysPressed['w']) {
-                    deltaX += speed * Math.cos(angleRad);
-                    deltaY += speed * Math.sin(angleRad);
-                }
-                if (keysPressed['s']) {
-                    deltaX -= speed * Math.cos(angleRad);
-                    deltaY -= speed * Math.sin(angleRad);
-                }
-                if (keysPressed['a']) {
-                    deltaX -= speed * Math.cos(angleRad + Math.PI / 2); // Corrected to move left
-                    deltaY -= speed * Math.sin(angleRad + Math.PI / 2);
-                }
-                if (keysPressed['d']) {
-                    deltaX += speed * Math.cos(angleRad + Math.PI / 2); // Corrected to move right
-                    deltaY += speed * Math.sin(angleRad + Math.PI / 2);
-                }
-
-                const playerRect = player.getBoundingClientRect();
-                const newX = playerRect.left + deltaX;
-                const newY = playerRect.top + deltaY;
-
-                // Check if the new position is within the bounds of the current room
-                if (newX >= 0 && newX + playerRect.width <= window.innerWidth &&
-                    newY >= 0 && newY + playerRect.height <= window.innerHeight) {
-                    player.style.left = `${newX}px`;
-                    player.style.top = `${newY}px`;
-                }
+            if (playerRect.top < 0) {
+                player.style.top = `${window.innerHeight - playerRect.height}px`;
             }
-
-            function checkRoomTransition() {
-                const playerRect = player.getBoundingClientRect();
-
-                // Check if player reaches the edges of the current room
-                if (playerRect.left < 0 || playerRect.top < 0 ||
-                    playerRect.right > window.innerWidth || playerRect.bottom > window.innerHeight) {
-                    // Hide current room
-                    rooms[currentRoomIndex].style.display = 'none';
-
-                    // Move to the next room (cycle back to the first room if at the last room)
-                    currentRoomIndex = (currentRoomIndex + 1) % rooms.length;
-
-                    // Show the new room
-                    rooms[currentRoomIndex].style.display = 'block';
-
-                    // Reposition the player at the opposite edge of the new room
-                    if (playerRect.left < 0) {
-                        player.style.left = `${window.innerWidth - playerRect.width}px`;
-                    }
-                    if (playerRect.top < 0) {
-                        player.style.top = `${window.innerHeight - playerRect.height}px`;
-                    }
-                    if (playerRect.right > window.innerWidth) {
-                        player.style.left = '0px';
-                    }
-                    if (playerRect.bottom > window.innerHeight) {
-                        player.style.top = '0px';
-                    }
-                }
+            if (playerRect.right > window.innerWidth) {
+                player.style.left = '0px';
             }
-        });
+            if (playerRect.bottom > window.innerHeight) {
+                player.style.top = '0px';
+            }
+        }
     </script>
 </body>
 </html>
