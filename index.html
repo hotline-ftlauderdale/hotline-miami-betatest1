@@ -1,50 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hotline Miami Movement</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden; /* Hide scrollbar */
-    }
-    #player {
-      width: 30px;
-      height: 30px;
-      background-color: #000;
-      position: absolute;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top-down Movement with Mouse Rotation</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="player"></div>
-  
-  <script>
-    // Initialize player position
-    var player = document.getElementById('player');
-    player.style.left = '50%';
-    player.style.top = '50%';
+    <div id="player"></div>
 
-    document.addEventListener('keydown', function(event) {
-      var playerSpeed = 5; // Adjust speed as needed
-
-      switch(event.keyCode) {
-        case 37: // Left arrow key
-          player.style.left = parseInt(player.style.left) - playerSpeed + 'px';
-          break;
-        case 38: // Up arrow key
-          player.style.top = parseInt(player.style.top) - playerSpeed + 'px';
-          break;
-        case 39: // Right arrow key
-          player.style.left = parseInt(player.style.left) + playerSpeed + 'px';
-          break;
-        case 40: // Down arrow key
-          player.style.top = parseInt(player.style.top) + playerSpeed + 'px';
-          break;
-      }
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
