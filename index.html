@@ -59,7 +59,7 @@
             player.style.transform = `translate(-50%, -50%) rotate(${playerAngle}deg)`;
         }
 
-        setInterval(updateRotation, 20);
+        setInterval(updateRotation, 60);
 
         document.addEventListener('keydown', function(event) {
             keysPressed[event.key] = true;
