@@ -3,12 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top-down Movement with Mouse Rotation</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Player Movement</title>
+    <style>
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
 </head>
 <body>
     <div id="player"></div>
 
-    <script src="script.js"></script>
+    <script>
+        const player = document.getElementById('player');
+
+        document.addEventListener('mousemove', function(event) {
+            const playerRect = player.getBoundingClientRect();
+            const playerX = playerRect.left + playerRect.width / 2;
+            const playerY = playerRect.top + playerRect.height / 2;
+            const angleDeg = angleToMouse(playerX, playerY, event.clientX, event.clientY);
+            player.style.transform = `translate(-50%, -50%) rotate(${angleDeg}deg)`;
+        });
+
+        function angleToMouse(px, py, mx, my) {
+            const dy = my - py;
+            const dx = mx - px;
+            const rad = Math.atan2(dy, dx);
+            const deg = rad * (180 / Math.PI);
+            return deg;
+        }
+    </script>
 </body>
 </html>
