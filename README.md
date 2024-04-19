@@ -1,2 +1,3 @@
 # hotline-miami-betatest1
-ah yes ft lauderdale
+A simple top-down "nerf" shooter based off of Hotline Miami (2012)
+
