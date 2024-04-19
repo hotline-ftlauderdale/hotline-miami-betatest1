@@ -10,7 +10,7 @@
             height: 50px;
             background-color: red;
             position: absolute;
-            transform-origin: center center;
+            transform-origin: center;
             transform: translate(-50%, -50%) rotate(0deg);
         }
         body {
@@ -33,44 +33,47 @@
         const speed = 5;
 
         document.addEventListener('mousemove', function(event) {
-            playerAngle = angleToMouse(playerX, playerY, event.clientX, event.clientY);
+            const rect = player.getBoundingClientRect();
+            const playerCenterX = rect.left + rect.width / 2;
+            const playerCenterY = rect.top + rect.height / 2;
+            const angleRad = Math.atan2(event.clientY - playerCenterY, event.clientX - playerCenterX);
+            playerAngle = angleRad * (180 / Math.PI);
             player.style.transform = `translate(-50%, -50%) rotate(${playerAngle}deg)`;
         });
 
         document.addEventListener('keydown', function(event) {
+            let deltaX = 0;
+            let deltaY = 0;
+            const angleRad = playerAngle * (Math.PI / 180);
+
             switch (event.key) {
                 case 'w': // Move forward in facing direction
-                    playerY -= speed * Math.sin(playerAngle * Math.PI / 180);
-                    playerX += speed * Math.cos(playerAngle * Math.PI / 180);
+                    deltaX = speed * Math.cos(angleRad);
+                    deltaY = speed * Math.sin(angleRad);
                     break;
                 case 's': // Move backward
-                    playerY += speed * Math.sin(playerAngle * Math.PI / 180);
-                    playerX -= speed * Math.cos(playerAngle * Math.PI / 180);
+                    deltaX = -speed * Math.cos(angleRad);
+                    deltaY = -speed * Math.sin(angleRad);
                     break;
                 case 'a': // Strafe left
-                    playerX -= speed * Math.sin(playerAngle * Math.PI / 180);
-                    playerY -= speed * Math.cos(playerAngle * Math.PI / 180);
+                    deltaX = -speed * Math.sin(angleRad);
+                    deltaY = speed * Math.cos(angleRad);
                     break;
                 case 'd': // Strafe right
-                    playerX += speed * Math.sin(playerAngle * Math.PI / 180);
-                    playerY += speed * Math.cos(playerAngle * Math.PI / 180);
+                    deltaX = speed * Math.sin(angleRad);
+                    deltaY = -speed * Math.cos(angleRad);
                     break;
             }
+            playerX += deltaX;
+            playerY += deltaY;
             updatePlayerPosition();
         });
 
         function updatePlayerPosition() {
-            player.style.top = `${playerY}px`;
             player.style.left = `${playerX}px`;
+            player.style.top = `${playerY}px`;
         }
 
-        function angleToMouse(px, py, mx, my) {
-            const dy = my - py;
-            const dx = mx - px;
-            const rad = Math.atan2(dy, dx);
-            const deg = rad * (180 / Math.PI);
-            return deg;
-        }
     </script>
 </body>
 </html>
