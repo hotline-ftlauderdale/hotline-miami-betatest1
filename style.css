@@ -1,6 +1,7 @@
 body {
     margin: 0;
     overflow: hidden;
+    background-color: #f0f0f0; /* Set background color for better visibility */
 }
 
 #player {
@@ -8,7 +9,6 @@ body {
     width: 30px;
     height: 30px;
     background-color: blue;
-    color: blue;
     border-radius: 50%;
     transform-origin: center;
 }
