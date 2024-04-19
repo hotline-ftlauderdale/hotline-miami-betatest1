@@ -31,8 +31,9 @@
         let playerY = window.innerHeight / 2;
         let mouseX = playerX;
         let mouseY = playerY;
-        let playerAngle = 0; // Angle in degrees
+        let playerAngle = 0;
         const speed = 5;
+        let keysPressed = {};
 
         document.addEventListener('mousemove', function(event) {
             mouseX = event.clientX;
@@ -48,35 +49,44 @@
             player.style.transform = `translate(-50%, -50%) rotate(${playerAngle}deg)`;
         }
 
-        setInterval(updateRotation, 20); // Update rotation every 20ms
+        setInterval(updateRotation, 20);
 
         document.addEventListener('keydown', function(event) {
+            keysPressed[event.key] = true;
+            movePlayer();
+        });
+
+        document.addEventListener('keyup', function(event) {
+            delete keysPressed[event.key];
+            movePlayer();
+        });
+
+        function movePlayer() {
             let deltaX = 0;
             let deltaY = 0;
             const angleRad = playerAngle * (Math.PI / 180);
 
-            switch (event.key) {
-                case 'w': // Move forward in facing direction
-                    deltaX = speed * Math.cos(angleRad);
-                    deltaY = speed * Math.sin(angleRad);
-                    break;
-                case 's': // Move backward
-                    deltaX = -speed * Math.cos(angleRad);
-                    deltaY = -speed * Math.sin(angleRad);
-                    break;
-                case 'a': // Strafe left
-                    deltaX = speed * Math.sin(angleRad);
-                    deltaY = -speed * Math.cos(angleRad);
-                    break;
-                case 'd': // Strafe right
-                    deltaX = -speed * Math.sin(angleRad);
-                    deltaY = speed * Math.cos(angleRad);
-                    break;
+            if (keysPressed['w']) {
+                deltaX += speed * Math.cos(angleRad);
+                deltaY += speed * Math.sin(angleRad);
             }
+            if (keysPressed['s']) {
+                deltaX -= speed * Math.cos(angleRad);
+                deltaY -= speed * Math.sin(angleRad);
+            }
+            if (keysPressed['a']) {
+                deltaX += speed * Math.sin(angleRad);
+                deltaY -= speed * Math.cos(angleRad);
+            }
+            if (keysPressed['d']) {
+                deltaX -= speed * Math.sin(angleRad);
+                deltaY += speed * Math.cos(angleRad);
+            }
+
             playerX += deltaX;
             playerY += deltaY;
             updatePlayerPosition();
-        });
+        }
 
         function updatePlayerPosition() {
             player.style.left = `${playerX}px`;
