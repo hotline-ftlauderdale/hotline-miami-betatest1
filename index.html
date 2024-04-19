@@ -30,7 +30,7 @@
         let playerX = window.innerWidth / 2;
         let playerY = window.innerHeight / 2;
         let playerAngle = 0; // Angle in degrees
-        const speed = 5;
+        const speed = 10;
 
         document.addEventListener('mousemove', function(event) {
             const rect = player.getBoundingClientRect();
@@ -56,12 +56,12 @@
                     deltaY = -speed * Math.sin(angleRad);
                     break;
                 case 'a': // Strafe left
-                    deltaX = -speed * Math.sin(angleRad);
-                    deltaY = speed * Math.cos(angleRad);
-                    break;
-                case 'd': // Strafe right
                     deltaX = speed * Math.sin(angleRad);
                     deltaY = -speed * Math.cos(angleRad);
+                    break;
+                case 'd': // Strafe right
+                    deltaX = -speed * Math.sin(angleRad);
+                    deltaY = speed * Math.cos(angleRad);
                     break;
             }
             playerX += deltaX;
