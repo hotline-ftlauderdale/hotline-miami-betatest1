@@ -1,0 +1,6 @@
+TODO
+add collisions/maps (colors possibly?)
+Tilemap switching
+(NERF) pewpews*
+*Given that i am working on this with a school chromebook i should probably be careful with what i say
+menu
