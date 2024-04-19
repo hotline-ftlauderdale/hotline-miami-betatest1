@@ -65,12 +65,12 @@
                     deltaY = -speed * Math.sin(angleRad);
                     break;
                 case 'a': // Strafe left
-                    deltaX = -speed * Math.sin(angleRad);
-                    deltaY = speed * Math.cos(angleRad);
-                    break;
-                case 'd': // Strafe right
                     deltaX = speed * Math.sin(angleRad);
                     deltaY = -speed * Math.cos(angleRad);
+                    break;
+                case 'd': // Strafe right
+                    deltaX = -speed * Math.sin(angleRad);
+                    deltaY = speed * Math.cos(angleRad);
                     break;
             }
             playerX += deltaX;
