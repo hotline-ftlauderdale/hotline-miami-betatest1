@@ -29,17 +29,26 @@
         const player = document.getElementById('player');
         let playerX = window.innerWidth / 2;
         let playerY = window.innerHeight / 2;
+        let mouseX = playerX;
+        let mouseY = playerY;
         let playerAngle = 0; // Angle in degrees
-        const speed = 10;
+        const speed = 5;
 
         document.addEventListener('mousemove', function(event) {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        });
+
+        function updateRotation() {
             const rect = player.getBoundingClientRect();
             const playerCenterX = rect.left + rect.width / 2;
             const playerCenterY = rect.top + rect.height / 2;
-            const angleRad = Math.atan2(event.clientY - playerCenterY, event.clientX - playerCenterX);
+            const angleRad = Math.atan2(mouseY - playerCenterY, mouseX - playerCenterX);
             playerAngle = angleRad * (180 / Math.PI);
             player.style.transform = `translate(-50%, -50%) rotate(${playerAngle}deg)`;
-        });
+        }
+
+        setInterval(updateRotation, 20); // Update rotation every 20ms
 
         document.addEventListener('keydown', function(event) {
             let deltaX = 0;
@@ -56,12 +65,12 @@
                     deltaY = -speed * Math.sin(angleRad);
                     break;
                 case 'a': // Strafe left
-                    deltaX = speed * Math.sin(angleRad);
-                    deltaY = -speed * Math.cos(angleRad);
-                    break;
-                case 'd': // Strafe right
                     deltaX = -speed * Math.sin(angleRad);
                     deltaY = speed * Math.cos(angleRad);
+                    break;
+                case 'd': // Strafe right
+                    deltaX = speed * Math.sin(angleRad);
+                    deltaY = -speed * Math.cos(angleRad);
                     break;
             }
             playerX += deltaX;
@@ -73,7 +82,6 @@
             player.style.left = `${playerX}px`;
             player.style.top = `${playerY}px`;
         }
-
     </script>
 </body>
 </html>
