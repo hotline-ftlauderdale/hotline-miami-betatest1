@@ -121,7 +121,7 @@
             const roomHeight = window.innerHeight;
 
             // Check if player reaches the edges of the current room
-            if (playerX < 0.5 || playerY < 0.5 || playerX > roomWidth - 0.5 || playerY > roomHeight - 0.5) {
+            if (playerX < 5 || playerY < 5 || playerX > roomWidth - 5 || playerY > roomHeight - 5) {
                 // Calculate new room index
                 currentRoomIndex = (currentRoomIndex + 1) % rooms.length;
                 rooms.forEach((room, index) => {
