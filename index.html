@@ -6,8 +6,8 @@
     <title>Player Movement and Room Transitions</title>
     <style>
         #player {
-            width: 0; 
-            height: 0; 
+            width: 0;
+            height: 0;
             border-top: 20px solid transparent;
             border-bottom: 20px solid transparent;
             border-left: 40px solid black;
@@ -41,14 +41,14 @@
     </style>
 </head>
 <body>
-    <div id="room1" class="room"></div>
-    <div id="room2" class="room"></div>
+    <div id="room1" class="room" style="display: block;"></div>
+    <div id="room2" class="room" style="display: none;"></div>
     <div id="player"></div>
 
     <script>
         const player = document.getElementById('player');
         const rooms = document.querySelectorAll('.room');
-        let currentRoomIndex = 0; // Starting in the first room
+        let currentRoomIndex = 0;
         let playerX = window.innerWidth / 2;
         let playerY = window.innerHeight / 2;
         let mouseX = playerX;
@@ -119,31 +119,26 @@
         function checkRoomTransition() {
             const roomWidth = window.innerWidth;
             const roomHeight = window.innerHeight;
+            let newRoomIndex = -1;
 
-            // Check if player reaches the edges of the current room
-            if (playerX < 5 || playerY < 5 || playerX > roomWidth - 5 || playerY > roomHeight - 5) {
-                // Calculate new room index
-                currentRoomIndex = (currentRoomIndex + 1) % rooms.length;
-                rooms.forEach((room, index) => {
-                    if (index === currentRoomIndex) {
-                        room.style.display = 'block';
-                    } else {
-                        room.style.display = 'none';
-                    }
-                });
+            if (playerX < 0) {
+                newRoomIndex = (currentRoomIndex + 1) % rooms.length;
+                playerX = roomWidth - 50; // Buffer space to prevent immediate re-trigger
+            } else if (playerX > roomWidth) {
+                newRoomIndex = (currentRoomIndex + 1) % rooms.length;
+                playerX = 50; // Buffer space
+            } else if (playerY < 0) {
+                newRoomIndex = (currentRoomIndex + 1) % rooms.length;
+                playerY = roomHeight - 50; // Buffer space
+            } else if (playerY > roomHeight) {
+                newRoomIndex = (currentRoomIndex + 1) % rooms.length;
+                playerY = 50; // Buffer space
+            }
 
-                // Reset position based on which edge was crossed
-                if (playerX < 0) {
-                    playerX = roomWidth - 1;
-                } else if (playerX > roomWidth) {
-                    playerX = 1;
-                }
-
-                if (playerY < 0) {
-                    playerY = roomHeight - 1;
-                } else if (playerY > roomHeight) {
-                    playerY = 1;
-                }
+            if (newRoomIndex !== -1) {
+                rooms[currentRoomIndex].style.display = 'none';
+                currentRoomIndex = newRoomIndex;
+                rooms[currentRoomIndex].style.display = 'block';
             }
         }
     </script>
